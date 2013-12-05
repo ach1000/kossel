@@ -59,9 +59,9 @@ module vertex(height, idler_offset, idler_space) {
         }
         // Idler support cones.
         translate([0, 26+idler_offset-30, 0]) rotate([-90, 0, 0])
-          cylinder(r1=30, r2=3, h=30-idler_space/2);
+          cylinder(r1=30, r2=2, h=30-idler_space/2);
         translate([0, 26+idler_offset+30, 0]) rotate([90, 0, 0])
-          cylinder(r1=30, r2=3, h=30-idler_space/2);
+          cylinder(r1=30, r2=2, h=30-idler_space/2);
       }
       translate([0, 58, 0]) minkowski() {
         intersection() {
@@ -84,11 +84,11 @@ module vertex(height, idler_offset, idler_space) {
               translate([a*7.5, y, 0]) rotate([0, a*90, 0]) screw_socket();
             }
             // Nut tunnels.
-            for (y = [0:4]) {
-              translate([0, -100-y, 3])
-                rotate([0, 0, -a*30]) cylinder(r=4, h=16, $fn=6);
-              translate([0, -100-y, -3]) scale([1, 1, -1])
-                rotate([0, 0, a*30]) cylinder(r=4, h=16, $fn=6);
+	    for (z = [-1, 1]) {
+	      scale([1, 1, z]) translate([0, -100, 3]) minkowski() {
+	        rotate([0, 0, -a*30]) cylinder(r=4, h=16, $fn=6);
+		cube([0.1, 5, 0.1], center=true);
+	      }
             }
           }
         }

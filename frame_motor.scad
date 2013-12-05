@@ -1,10 +1,9 @@
 include <configuration.scad>;
 
 use <vertex.scad>;
+use <nema17.scad>;
 
 $fn = 24;
-motor_offset = 44;
-motor_length = 47;
 
 module frame_motor() {
   difference() {
@@ -23,17 +22,16 @@ module frame_motor() {
     translate([0, motor_offset, 0]) {
       // Motor shaft/pulley cutout.
       rotate([90, 0, 0]) cylinder(r=12, h=20, center=true, $fn=60);
-      // NEMA 17 mounting screws.
-      for (a = [0:90:359]) rotate([0, a, 0]) {
-          translate([15.5, 0, 15.5]) rotate([90, 0, 0])
-            cylinder(r=1.65, h=20, center=true);
+      // NEMA 17 stepper motor mounting screws.
+      for (x = [-1, 1]) for (z = [-1, 1]) {
+        scale([x, 1, z]) translate([15.5, -5, 15.5]) {
+          rotate([90, 0, 0]) cylinder(r=1.65, h=20, center=true, $fn=12);
+          // Easier ball driver access.
+          rotate([74, -30, 0]) # cylinder(r=1.8, h=60, $fn=12);
         }
+      }
     }
-  }
-  // NEMA 17 stepper motor.
-  % translate([0, motor_offset + motor_length/2, 0]) intersection() {
-    cube([42.2, motor_length, 42.2], center=true);
-    rotate([0, 45, 0]) cube([52, motor_length, 52], center=true);
+    translate([0, motor_offset, 0]) rotate([90, 0, 0]) % nema17();
   }
 }
 
